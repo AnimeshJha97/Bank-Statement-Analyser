@@ -1,0 +1,15 @@
+{
+  "name": "statement",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "db:generate": "npm run db:generate --workspace=@statement/core",
+    "db:migrate": "npm run db:migrate --workspace=@statement/core",
+    "db:seed": "npm run db:seed --workspace=@statement/core"
+  },
+  "engines": { "node": ">=20" }
+}

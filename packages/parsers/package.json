@@ -1,0 +1,22 @@
+{
+  "name": "@statement/parsers",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node test/generate-pdf-fixtures.js && npm run build && node --test --experimental-test-isolation=none test/*.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pngjs": "^6.0.5",
+    "pdf-lib": "^1.17.1",
+    "typescript": "^5.8.0"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^6.1.200",
+    "pngjs": "^7.0.0",
+    "tesseract.js": "^7.0.0"
+  }
+}

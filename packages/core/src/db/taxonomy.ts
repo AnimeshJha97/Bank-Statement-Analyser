@@ -1,0 +1,16 @@
+export const defaultCategoryTaxonomy = [
+  { name: "Groceries", color: "#22C55E", icon: "shopping-basket" },
+  { name: "Dining", color: "#F97316", icon: "utensils" },
+  { name: "Transport", color: "#3B82F6", icon: "car" },
+  { name: "Subscriptions", color: "#8B5CF6", icon: "repeat" },
+  { name: "Utilities", color: "#06B6D4", icon: "plug" },
+  { name: "Rent/Mortgage", color: "#A855F7", icon: "house" },
+  { name: "Entertainment", color: "#EC4899", icon: "clapperboard" },
+  { name: "Healthcare", color: "#EF4444", icon: "heart-pulse" },
+  { name: "Shopping", color: "#F59E0B", icon: "shopping-bag" },
+  { name: "Travel", color: "#0EA5E9", icon: "plane" },
+  { name: "Fees/Interest", color: "#64748B", icon: "badge-dollar-sign" },
+  { name: "Income", color: "#10B981", icon: "landmark" },
+  { name: "Transfers", color: "#6366F1", icon: "arrow-left-right" },
+  { name: "Other", color: "#94A3B8", icon: "circle-ellipsis" },
+] as const;
