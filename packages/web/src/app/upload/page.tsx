@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { useApi, useApiClient, useUser } from "@/lib/api";
+import { useApi, useApiClient } from "@/lib/api";
 import type { AccountView, UploadResult } from "@/lib/types";
 
 type Phase =
@@ -12,7 +12,6 @@ type Phase =
   | { kind: "failed"; filename: string; message: string };
 
 export default function UploadPage() {
-  const { userId } = useUser();
   const client = useApiClient();
   const accounts = useApi<{ accounts: AccountView[] }>("/api/accounts");
   const [accountId, setAccountId] = useState("");
@@ -51,7 +50,6 @@ export default function UploadPage() {
     // XHR for genuine upload progress; parsing runs server-side after the body lands.
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/statements");
-    xhr.setRequestHeader("x-user-id", userId);
     xhr.upload.onprogress = (event) => {
       if (!event.lengthComputable) return;
       const pct = Math.round((event.loaded / event.total) * 100);

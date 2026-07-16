@@ -1,6 +1,7 @@
 export { capabilities } from "./capabilities.js";
 export type { DeploymentMode } from "./env.js";
 export * from "./db/schema.js";
+export * from "./security.js";
 export { defaultCategoryTaxonomy } from "./db/taxonomy.js";
 export { createDatabase } from "./db/client.js";
 export { normalizeMerchant } from "./categorization/normalization.js";

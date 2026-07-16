@@ -19,7 +19,6 @@ DEPLOYMENT_MODE=self-hosted
 DATABASE_URL=postgres://statement:statement@db:5432/statement
 OPENAI_API_KEY=            # can also be set per-user in Settings instead
 ENCRYPTION_KEY=            # generate with: openssl rand -hex 32
-SESSION_SECRET=            # generate with: openssl rand -hex 32
 ```
 
 ```bash
@@ -47,7 +46,7 @@ npm run dev
 | `DATABASE_URL` | yes | Postgres connection string |
 | `OPENAI_API_KEY` | no | global fallback; users can set their own in Settings instead |
 | `ENCRYPTION_KEY` | yes | AES-256-GCM key for encrypting stored API keys; 32-byte hex |
-| `SESSION_SECRET` | yes | auth session signing secret |
+| `NEXT_TELEMETRY_DISABLED` | recommended | Keep set to `1` for the self-hosted zero-telemetry guarantee |
 | `PLAID_CLIENT_ID` / `PLAID_SECRET` | hosted only | ignored on self-hosted builds |
 | `STRIPE_SECRET_KEY` | hosted only | ignored on self-hosted builds |
 

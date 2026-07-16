@@ -107,6 +107,9 @@ export function Sidebar() {
         );
       })}
       <div className="flex-1" />
+      <Link href="/settings" className="flex items-center gap-[11px] rounded-[9px] px-3 py-[9px] text-[13.5px] font-medium text-ink2 hover:bg-[color-mix(in_oklab,var(--ink),transparent_95%)]">
+        <span className="text-base">⚙</span>{!collapsed && <span>Settings</span>}
+      </Link>
       {!collapsed && (
         <p className="border-t border-line px-3 pt-3 text-[11px] leading-relaxed text-ink3">
           Private by default — statements are parsed locally and deleted after import.

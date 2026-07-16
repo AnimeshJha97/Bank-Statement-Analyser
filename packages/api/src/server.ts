@@ -1,21 +1,26 @@
-import { createDatabase } from "@statement/core";
+import { createDatabase, parseEncryptionKey } from "@statement/core";
 import { buildApp } from "./app.js";
 import { createDrizzleStatementRepository } from "./repository.js";
 import { createDrizzleFinanceRepository } from "./finance.js";
 import { createDrizzleDashboardRepository } from "./dashboard.js";
 import { createDrizzleStatementCategorizer } from "./categorization.js";
+import { AuthService } from "./auth.js";
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) throw new Error("DATABASE_URL is required");
 
 const { client, db } = createDatabase(databaseUrl);
 const openaiApiKey = process.env.OPENAI_API_KEY || undefined;
+const encryptionKey = process.env.ENCRYPTION_KEY;
+if (!encryptionKey) throw new Error("ENCRYPTION_KEY is required");
+const auth = new AuthService(db, parseEncryptionKey(encryptionKey));
 
 const app = buildApp(
   createDrizzleStatementRepository(db),
   createDrizzleFinanceRepository(db),
   createDrizzleDashboardRepository(db, { openaiApiKey }),
-  createDrizzleStatementCategorizer(db, { openaiApiKey }),
+  createDrizzleStatementCategorizer(db, { openaiApiKey, openaiApiKeyForUser: (userId) => auth.getOpenAIKey(userId) }),
+  auth,
 );
 
 const port = Number(process.env.API_PORT ?? 3001);

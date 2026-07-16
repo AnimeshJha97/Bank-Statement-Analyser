@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: statement
+      POSTGRES_USER: statement
+      POSTGRES_PASSWORD: statement
+    volumes:
+      - statement-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U statement"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      DEPLOYMENT_MODE: self-hosted
+      DATABASE_URL: postgres://statement:statement@db:5432/statement
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?Set ENCRYPTION_KEY in .env}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      API_HOST: 0.0.0.0
+    depends_on:
+      db:
+        condition: service_healthy
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_TELEMETRY_DISABLED: "1"
+    depends_on:
+      - api
+volumes:
+  statement-data:

@@ -7,6 +7,7 @@ import type { FinanceRepository } from "./finance.js";
 import type { DashboardRepository } from "./dashboard.js";
 import { registerDashboardRoutes } from "./dashboard-routes.js";
 import type { StatementCategorizer } from "./categorization.js";
+import { registerAuthRoutes, type AuthService } from "./auth.js";
 
 const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
@@ -27,11 +28,21 @@ export function buildApp(
   finance?: FinanceRepository,
   dashboard?: DashboardRepository,
   categorizer?: StatementCategorizer,
+  auth?: AuthService,
 ) {
   const app = Fastify({ logger: false });
   app.register(multipart, { limits: { files: 1, fileSize: MAX_UPLOAD_BYTES, fields: 4 } });
+  if (auth) registerAuthRoutes(app, auth);
+
+  const resolveUser = async (request: Parameters<AuthService["authenticate"]>[0]) => {
+    if (auth) return (await auth.authenticate(request))?.userId ?? null;
+    const value = request.headers["x-user-id"];
+    return typeof value === "string" && value.trim() ? value.trim() : null;
+  };
 
   app.post("/api/statements", async (request, reply) => {
+    const authenticatedUserId = await resolveUser(request);
+    if (auth && !authenticatedUserId) return reply.code(401).send({ error: "Authentication required" });
     let file: { filename: string; bytes: Buffer } | undefined;
     let accountId: string | undefined;
     try {
@@ -50,7 +61,7 @@ export function buildApp(
     try { fileType = detectStatementType(file.filename, file.bytes); }
     catch (error) { return reply.code(415).send({ error: error instanceof Error ? error.message : "Unsupported file" }); }
 
-    const statementId = await repository.createStatement({ accountId, sourceFilename: file.filename, fileType });
+    const statementId = await repository.createStatement({ userId: authenticatedUserId ?? "", accountId, sourceFilename: file.filename, fileType });
     try {
       let parsedTransactions: RawTransaction[];
       let parserProfileUsed: string;
@@ -86,16 +97,12 @@ export function buildApp(
     }
   });
 
-  const userId = (headers: Record<string, unknown>) => {
-    const value = headers["x-user-id"];
-    return typeof value === "string" && value.trim() ? value.trim() : null;
-  };
   const unavailable = (reply: { code(status: number): { send(value: unknown): unknown } }) =>
     reply.code(503).send({ error: "finance repository is not configured" });
 
   app.get<{ Querystring: { period?: string } }>("/api/insights/monthly", async (request, reply) => {
     if (!finance) return unavailable(reply);
-    const owner = userId(request.headers); if (!owner) return reply.code(401).send({ error: "x-user-id is required" });
+    const owner = await resolveUser(request); if (!owner) return reply.code(401).send({ error: "Authentication required" });
     if (!request.query.period) return reply.code(400).send({ error: "period is required" });
     try {
       const cached = await finance.getInsight(owner, request.query.period);
@@ -105,7 +112,7 @@ export function buildApp(
 
   app.post<{ Querystring: { period?: string } }>("/api/insights/monthly/refresh", async (request, reply) => {
     if (!finance) return unavailable(reply);
-    const owner = userId(request.headers); if (!owner) return reply.code(401).send({ error: "x-user-id is required" });
+    const owner = await resolveUser(request); if (!owner) return reply.code(401).send({ error: "Authentication required" });
     if (!request.query.period) return reply.code(400).send({ error: "period is required" });
     try { return await finance.refreshInsight(owner, request.query.period); }
     catch (error) { return reply.code(400).send({ error: error instanceof Error ? error.message : "invalid request" }); }
@@ -113,7 +120,7 @@ export function buildApp(
 
   app.get<{ Querystring: { month?: string } }>("/api/budgets", async (request, reply) => {
     if (!finance) return unavailable(reply);
-    const owner = userId(request.headers); if (!owner) return reply.code(401).send({ error: "x-user-id is required" });
+    const owner = await resolveUser(request); if (!owner) return reply.code(401).send({ error: "Authentication required" });
     if (!request.query.month) return reply.code(400).send({ error: "month is required" });
     try { return { month: request.query.month, budgets: await finance.listBudgets(owner, request.query.month) }; }
     catch (error) { return reply.code(400).send({ error: error instanceof Error ? error.message : "invalid request" }); }
@@ -121,7 +128,7 @@ export function buildApp(
 
   app.put<{ Body: { categoryId?: string; month?: string; targetAmountCents?: number } }>("/api/budgets", async (request, reply) => {
     if (!finance) return unavailable(reply);
-    const owner = userId(request.headers); if (!owner) return reply.code(401).send({ error: "x-user-id is required" });
+    const owner = await resolveUser(request); if (!owner) return reply.code(401).send({ error: "Authentication required" });
     const { categoryId, month, targetAmountCents } = request.body ?? {};
     if (!categoryId || !month || targetAmountCents === undefined) return reply.code(400).send({ error: "categoryId, month, and targetAmountCents are required" });
     try { return await finance.upsertBudget(owner, { categoryId, month, targetAmountCents }); }
@@ -130,7 +137,7 @@ export function buildApp(
 
   app.delete<{ Querystring: { categoryId?: string; month?: string } }>("/api/budgets", async (request, reply) => {
     if (!finance) return unavailable(reply);
-    const owner = userId(request.headers); if (!owner) return reply.code(401).send({ error: "x-user-id is required" });
+    const owner = await resolveUser(request); if (!owner) return reply.code(401).send({ error: "Authentication required" });
     const { categoryId, month } = request.query;
     if (!categoryId || !month) return reply.code(400).send({ error: "categoryId and month are required" });
     try {
@@ -139,6 +146,6 @@ export function buildApp(
     } catch (error) { return reply.code(400).send({ error: error instanceof Error ? error.message : "invalid request" }); }
   });
 
-  if (dashboard) registerDashboardRoutes(app, dashboard);
+  if (dashboard) registerDashboardRoutes(app, dashboard, resolveUser, !auth);
   return app;
 }

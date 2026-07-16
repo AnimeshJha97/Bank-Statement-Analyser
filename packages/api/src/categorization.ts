@@ -20,6 +20,7 @@ type Database = ReturnType<typeof createDatabase>["db"];
 
 export interface StatementCategorizerOptions {
   openaiApiKey?: string | undefined;
+  openaiApiKeyForUser?: ((userId: string) => Promise<string | undefined>) | undefined;
 }
 
 /**
@@ -39,8 +40,9 @@ export function createDrizzleStatementCategorizer(db: Database, options: Stateme
       if (rows.length === 0) return 0;
 
       let resultForRow: (index: number) => CategoryResult | undefined;
-      if (options.openaiApiKey) {
-        const engine = new CategorizationEngine(cache, new OpenAIMerchantCategorizer({ apiKey: options.openaiApiKey }));
+      const openaiApiKey = await options.openaiApiKeyForUser?.(account.userId) ?? options.openaiApiKey;
+      if (openaiApiKey) {
+        const engine = new CategorizationEngine(cache, new OpenAIMerchantCategorizer({ apiKey: openaiApiKey }));
         const results = await engine.categorize(account.userId, rows.map((row) => row.rawDescription));
         resultForRow = (index) => results[index];
       } else {

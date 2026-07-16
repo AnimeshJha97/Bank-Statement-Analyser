@@ -1,9 +1,9 @@
 import { normalizeDescription, type TransactionWithDedupeHash } from "@statement/parsers";
-import { createDatabase, statements, transactions } from "@statement/core";
-import { eq } from "drizzle-orm";
+import { accounts, createDatabase, statements, transactions } from "@statement/core";
+import { and, eq } from "drizzle-orm";
 
 export type FileType = "csv" | "pdf";
-export type NewStatement = { accountId: string; sourceFilename: string; fileType: FileType };
+export type NewStatement = { userId: string; accountId: string; sourceFilename: string; fileType: FileType };
 export type CompleteStatement = {
   statementId: string;
   accountId: string;
@@ -24,7 +24,10 @@ type StatementDatabase = ReturnType<typeof createDatabase>["db"];
 export function createDrizzleStatementRepository(db: StatementDatabase): StatementRepository {
   return {
     async createStatement(input) {
-      const [created] = await db.insert(statements).values({ ...input, parseStatus: "processing" }).returning({ id: statements.id });
+      const { userId, ...statement } = input;
+      const [owned] = await db.select({ id: accounts.id }).from(accounts).where(and(eq(accounts.id, input.accountId), eq(accounts.userId, userId))).limit(1);
+      if (!owned) throw new Error("Account not found");
+      const [created] = await db.insert(statements).values({ ...statement, parseStatus: "processing" }).returning({ id: statements.id });
       if (!created) throw new Error("Failed to create statement");
       return created.id;
     },

@@ -95,6 +95,8 @@ Each sprint is scoped as **one bounded Codex session**: self-contained, points a
 ---
 
 ### Sprint 9 — Auth, BYO Key Storage, Settings (OSS-complete)
+**Status:** ✅ Done (2026-07-17)
+
 **Scope:** user auth, encrypted BYO OpenAI key storage/rotation, settings UI, `DEPLOYMENT_MODE=self-hosted` fully functional end-to-end.
 **Done when:** a fresh self-hosted deploy, from `docker compose up`, lets a new user sign up, add their OpenAI key, upload a statement, and see categorized insights — with zero external calls other than to OpenAI.
 
