@@ -8,3 +8,6 @@ export { CategorizationEngine } from "./categorization/engine.js";
 export { OpenAIMerchantCategorizer } from "./categorization/openai.js";
 export { DrizzleCategoryCache } from "./categorization/drizzle-cache.js";
 export type * from "./categorization/types.js";
+export { SubscriptionDetector } from "./subscriptions/engine.js";
+export { OpenAISubscriptionNamer } from "./subscriptions/openai.js";
+export type * from "./subscriptions/types.js";

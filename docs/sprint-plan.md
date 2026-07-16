@@ -62,6 +62,8 @@ Each sprint is scoped as **one bounded Codex session**: self-contained, points a
 ---
 
 ### Sprint 6 — Subscription Detection
+**Status:** ✅ Done (2026-07-16)
+
 **Scope:** merchant+amount grouping, cadence detection from date deltas, `next_expected_date` tracking, lapsed detection, single LLM call per group for display name.
 **Done when:** a fixture transaction history correctly identifies weekly/monthly/annual subscriptions, correctly ignores one-off repeat purchases that aren't periodic, and correctly flags a lapsed subscription.
 
