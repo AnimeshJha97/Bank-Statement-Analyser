@@ -73,6 +73,8 @@ Each sprint is scoped as **one bounded Codex session**: self-contained, points a
 ---
 
 ### Sprint 7 — Insights & Budgets Engine
+**Status:** ✅ Done (2026-07-16)
+
 **Scope:** monthly aggregate computation (spend by category, trend vs. prior month, top merchants), `insight_snapshots` caching, budget target tracking against actuals.
 **Done when:** insight snapshots generate correctly from a seeded transaction history and budgets endpoint returns accurate target-vs-actual per category.
 

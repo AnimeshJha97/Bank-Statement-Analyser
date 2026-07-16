@@ -11,3 +11,8 @@ export type * from "./categorization/types.js";
 export { SubscriptionDetector } from "./subscriptions/engine.js";
 export { OpenAISubscriptionNamer } from "./subscriptions/openai.js";
 export type * from "./subscriptions/types.js";
+export { aggregateMonthlyInsights, normalizeMonth, priorMonth } from "./insights/engine.js";
+export { DrizzleInsightStore } from "./insights/repository.js";
+export type * from "./insights/types.js";
+export { DrizzleBudgetStore } from "./budgets/repository.js";
+export type * from "./budgets/types.js";
