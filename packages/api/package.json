@@ -1,5 +1,16 @@
 {
   "name": "@statement/api", "version": "0.0.0", "private": true, "type": "module",
-  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit" },
-  "devDependencies": { "typescript": "^5.8.0" }
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build --workspace=@statement/core && npm run build --workspace=@statement/parsers && npm run build && node --test --experimental-test-isolation=none test/*.test.js"
+  },
+  "dependencies": {
+    "@fastify/multipart": "^9.0.0",
+    "@statement/core": "0.0.0",
+    "@statement/parsers": "0.0.0",
+    "drizzle-orm": "^0.44.0",
+    "fastify": "^5.0.0"
+  },
+  "devDependencies": { "@types/node": "^22.0.0", "pdf-lib": "^1.17.1", "typescript": "^5.8.0" }
 }

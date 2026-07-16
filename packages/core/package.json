@@ -9,7 +9,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
-    "db:seed": "tsx src/db/seed.ts"
+    "db:seed": "tsx src/db/seed.ts",
+    "test": "npm run build && node --test --experimental-test-isolation=none test/*.test.js"
   },
   "dependencies": { "dotenv": "^16.5.0", "drizzle-orm": "^0.44.0", "postgres": "^3.4.7" },
   "devDependencies": { "@types/node": "^22.0.0", "drizzle-kit": "^0.31.0", "tsx": "^4.20.0", "typescript": "^5.8.0" }

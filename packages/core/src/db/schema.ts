@@ -54,6 +54,7 @@ export const statements = pgTable("statements", {
   parseStatus: parseStatusEnum("parse_status").notNull().default("pending"),
   parserProfileUsed: text("parser_profile_used"),
   needsReview: boolean("needs_review").notNull().default(false),
+  reviewRowIndices: jsonb("review_row_indices").$type<number[]>().notNull().default([]),
 }, (table) => [index("statements_account_id_idx").on(table.accountId)]);
 
 export const categories = pgTable("categories", {

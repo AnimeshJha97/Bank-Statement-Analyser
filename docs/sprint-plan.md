@@ -40,6 +40,8 @@ Each sprint is scoped as **one bounded Codex session**: self-contained, points a
 ---
 
 ### Sprint 4 — Ingest API: Upload, Validation, Persistence
+**Status:** ✅ Done (2026-07-16)
+
 **Scope:** `api` package: statement upload endpoint, format detection routing to the right parser, balance-chain validation, persistence of normalized transactions, `needs_review` surfacing.
 **Done when:** end-to-end upload of a CSV and a PDF through the API results in correctly persisted, deduped transactions; a deliberately broken statement gets flagged `needs_review` with the failing rows identified.
 
@@ -49,6 +51,8 @@ Each sprint is scoped as **one bounded Codex session**: self-contained, points a
 ---
 
 ### Sprint 5 — Categorization Engine
+**Status:** ✅ Done (2026-07-16)
+
 **Scope:** merchant normalization rules, merchant→category cache lookup, batched LLM categorization for cache misses with structured JSON output, cache write-back.
 **Done when:** a batch of uncategorized transactions gets correctly categorized end-to-end, cache hit rate is verified to skip repeat merchants on a second run, and low-confidence results are stored (not silently dropped or forced).
 

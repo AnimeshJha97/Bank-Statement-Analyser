@@ -1,0 +1,1 @@
+ALTER TABLE "statements" ADD COLUMN "review_row_indices" jsonb DEFAULT '[]'::jsonb NOT NULL;
