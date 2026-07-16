@@ -4,6 +4,7 @@ import {
   check,
   date,
   index,
+  integer,
   jsonb,
   numeric,
   pgEnum,
@@ -83,6 +84,7 @@ export const transactions = pgTable("transactions", {
   categoryConfidence: numeric("category_confidence", { precision: 5, scale: 4 }),
   categorySource: categorySourceEnum("category_source"),
   isSubscriptionCandidate: boolean("is_subscription_candidate").notNull().default(false),
+  sourceRowIndex: integer("source_row_index"),
   dedupeHash: text("dedupe_hash").notNull(),
 }, (table) => [
   uniqueIndex("transactions_account_dedupe_unique").on(table.accountId, table.dedupeHash),

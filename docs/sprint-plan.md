@@ -84,6 +84,8 @@ Each sprint is scoped as **one bounded Codex session**: self-contained, points a
 ---
 
 ### Sprint 8 — Dashboard Frontend
+**Status:** ✅ Done (2026-07-17)
+
 **Scope:** Next.js dashboard: upload flow, transaction table (with inline category correction), insights views (trend charts, top merchants), subscriptions view, needs-review queue.
 **Done when:** a user can upload a statement, see parsed/categorized transactions, correct a category inline, view monthly insights, and see the subscriptions list — all against the real API from prior sprints.
 

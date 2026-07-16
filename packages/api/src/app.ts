@@ -4,6 +4,9 @@ import { assignDedupeHashes, parseCsv, parsePdf, type RawTransaction } from "@st
 import type { FileType, StatementRepository } from "./repository.js";
 import { validateBalanceChain } from "./validation.js";
 import type { FinanceRepository } from "./finance.js";
+import type { DashboardRepository } from "./dashboard.js";
+import { registerDashboardRoutes } from "./dashboard-routes.js";
+import type { StatementCategorizer } from "./categorization.js";
 
 const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
@@ -19,7 +22,12 @@ export function detectStatementType(filename: string, bytes: Uint8Array): FileTy
   throw new Error("Unsupported statement format; upload a CSV or PDF file");
 }
 
-export function buildApp(repository: StatementRepository, finance?: FinanceRepository) {
+export function buildApp(
+  repository: StatementRepository,
+  finance?: FinanceRepository,
+  dashboard?: DashboardRepository,
+  categorizer?: StatementCategorizer,
+) {
   const app = Fastify({ logger: false });
   app.register(multipart, { limits: { files: 1, fileSize: MAX_UPLOAD_BYTES, fields: 4 } });
 
@@ -64,7 +72,13 @@ export function buildApp(repository: StatementRepository, finance?: FinanceRepos
         statementId, accountId, parserProfileUsed, needsReview, reviewRowIndices,
         transactions: assignDedupeHashes(accountId, parsedTransactions),
       });
-      return reply.code(202).send({ statementId, parseStatus: "completed", needsReview, reviewRowIndices, transactionCount: insertedCount, parserProfileUsed });
+      let categorizedCount = 0;
+      if (categorizer) {
+        // Best-effort: a categorization failure must not fail an already-persisted ingest.
+        try { categorizedCount = await categorizer.categorizeStatement(accountId, statementId); }
+        catch (error) { request.log.error(error); }
+      }
+      return reply.code(202).send({ statementId, parseStatus: "completed", needsReview, reviewRowIndices, transactionCount: insertedCount, categorizedCount, parserProfileUsed });
     } catch (error) {
       await repository.failStatement(statementId);
       request.log.error(error);
@@ -124,5 +138,7 @@ export function buildApp(repository: StatementRepository, finance?: FinanceRepos
       return deleted ? reply.code(204).send() : reply.code(404).send({ error: "budget not found" });
     } catch (error) { return reply.code(400).send({ error: error instanceof Error ? error.message : "invalid request" }); }
   });
+
+  if (dashboard) registerDashboardRoutes(app, dashboard);
   return app;
 }

@@ -38,6 +38,7 @@ export function createDrizzleStatementRepository(db: StatementDatabase): Stateme
           merchantNormalized: normalizeDescription(transaction.description),
           amount: BigInt(Math.round(transaction.amount * 100)),
           balanceAfter: transaction.balanceAfter === undefined ? null : BigInt(Math.round(transaction.balanceAfter * 100)),
+          sourceRowIndex: transaction.sourceRowIndex,
           dedupeHash: transaction.dedupeHash,
         }));
         const inserted = rows.length

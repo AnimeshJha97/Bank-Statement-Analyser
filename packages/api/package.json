@@ -3,6 +3,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "npm run build && node --env-file=../../.env dist/server.js",
+    "start": "node --env-file=../../.env dist/server.js",
     "test": "npm run build --workspace=@statement/core && npm run build --workspace=@statement/parsers && npm run build && node --test --experimental-test-isolation=none test/*.test.js"
   },
   "dependencies": {

@@ -15,6 +15,13 @@
       "when": 1784205087358,
       "tag": "0001_tiresome_harrier",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784233942309,
+      "tag": "0002_charming_titania",
+      "breakpoints": true
     }
   ]
 }

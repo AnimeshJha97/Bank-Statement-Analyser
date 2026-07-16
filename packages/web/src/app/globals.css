@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens from the Claude Design UI spec (Statement Dashboard). */
+:root {
+  color-scheme: light;
+  --accent: #45518f;
+  --bg: #f6f4f0;
+  --card: #fffefc;
+  --card2: #f8f6f1;
+  --ink: #2b2733;
+  --ink2: #736d7e;
+  --ink3: #a8a2b2;
+  --line: rgba(43, 39, 51, 0.09);
+  --shadow: 0 1px 2px rgba(43, 39, 51, 0.04), 0 5px 18px rgba(43, 39, 51, 0.05);
+  --good: oklch(0.48 0.08 170);
+  --warn: oklch(0.6 0.11 70);
+  --warn-bg: oklch(0.95 0.035 80);
+  --accent-t: var(--accent);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141218;
+  --card: #1d1a23;
+  --card2: #25212d;
+  --ink: #eeecf2;
+  --ink2: #a49cb0;
+  --ink3: #6f6879;
+  --line: rgba(238, 236, 242, 0.1);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.35);
+  --good: oklch(0.74 0.08 170);
+  --warn: oklch(0.76 0.1 70);
+  --warn-bg: oklch(0.32 0.04 80);
+  --accent-t: color-mix(in oklab, var(--accent), white 45%);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.25s;
+}
+
+input::placeholder {
+  color: var(--ink3);
+}
+
+/* Category identity chip: base color arrives via the --cat custom property. */
+.cat-chip {
+  background: color-mix(in oklab, var(--cat), var(--card) 86%);
+  color: color-mix(in oklab, var(--cat), var(--ink) 38%);
+}
+:root[data-theme="dark"] .cat-chip {
+  background: color-mix(in oklab, var(--cat), var(--card) 68%);
+  color: color-mix(in oklab, var(--cat), white 52%);
+}
+.cat-dot {
+  background: var(--cat);
+}
+
+/* Design-spec select: bordered pill with a small CSS chevron. */
+.select-pill {
+  appearance: none;
+  border: 1px solid var(--line);
+  background-color: var(--card);
+  border-radius: 9px;
+  padding: 7px 28px 7px 12px;
+  font-size: 12.5px;
+  color: var(--ink);
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink3) 50%),
+    linear-gradient(135deg, var(--ink3) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 55%, calc(100% - 11px) 55%;
+  background-size: 4px 4px;
+  background-repeat: no-repeat;
+}
