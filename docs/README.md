@@ -57,15 +57,15 @@ See [docs/installation.md](/docs/installation.md) for manual (non-Docker) setup,
 4. **Detect subscriptions** — recurring charges are grouped and flagged automatically, including lapsed subscriptions.
 5. **See insights** — spend trends, budgets, and top merchants, updated as you upload more statements.
 
-Full pipeline design: [docs/architecture.md](docs/architecture.md).
+Full pipeline design: [docs/architecture.md](/docs/architecture.md).
 
 ## Contributing
 
-The bank-profile parser library is the easiest way to contribute: if Statement falls back to the generic parser for your bank, adding a profile is usually a small, self-contained PR. See [docs/architecture.md §3.3](docs/architecture.md#33-pdf-extraction).
+The bank-profile parser library is the easiest way to contribute: if Statement falls back to the generic parser for your bank, adding a profile is usually a small, self-contained PR. See [docs/architecture.md](/docs/architecture.md#33-pdf-extraction).
 
 ## Roadmap
 
-See [docs/roadmap.md](docs/roadmap.md).
+See [docs/roadmap.md](/docs/roadmap.md).
 
 ## License
 
@@ -73,4 +73,4 @@ See [docs/roadmap.md](docs/roadmap.md).
 
 ## Security & Privacy
 
-Self-hosted mode makes zero outbound calls other than to your configured OpenAI endpoint. Uploaded statement files are deleted after parsing by default — only normalized transaction data is retained, unless you explicitly opt in to keeping originals. See [docs/architecture.md §7](docs/architecture.md#7-security--privacy-posture).
+Self-hosted mode makes zero outbound calls other than to your configured OpenAI endpoint. Uploaded statement files are deleted after parsing by default — only normalized transaction data is retained, unless you explicitly opt in to keeping originals. See [docs/architecture.md §7](/docs/architecture.md#7-security--privacy-posture).
