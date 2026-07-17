@@ -47,7 +47,7 @@ docker compose up
 
 Then open `http://localhost:3000`, sign up, add your OpenAI key in Settings, and upload your first statement.
 
-See [docs/installation.md](docs/installation.md) for manual (non-Docker) setup, environment variable reference, and troubleshooting.
+See [docs/installation.md](/installation.md) for manual (non-Docker) setup, environment variable reference, and troubleshooting.
 
 ## How It Works
 
