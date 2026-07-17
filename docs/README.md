@@ -39,7 +39,7 @@ Most budgeting apps want your bank credentials on day one. Statement doesn't ask
 ## Quickstart (Self-Hosted)
 
 ```bash
-git clone https://github.com/<org>/statement.git
+git clone https://github.com/AnimeshJha97/Bank-Statement-Analyser.git
 cd statement
 cp .env.example .env       # add your OPENAI_API_KEY and a DB connection string
 docker compose up
